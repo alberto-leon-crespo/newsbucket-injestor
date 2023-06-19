@@ -1,0 +1,24 @@
+{
+  "name": "newsbucket.ia",
+  "version": "1.0.0",
+  "description": "Feed and news aggregator to make news trusted and verified",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "retrieve-feeds-urls": "node src/feed_scrapper.js",
+    "retrieve-feeds-news": "node src/news_reader.js"
+  },
+  "author": "Alberto León",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12",
+    "dayjs": "^1.11.8",
+    "md5": "^2.3.0",
+    "md5.js": "^1.3.5",
+    "mongoose": "^7.3.0",
+    "object-hash": "^3.0.0",
+    "puppeteer": "^20.7.2",
+    "rss-parser": "^3.13.0"
+  }
+}

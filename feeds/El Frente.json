@@ -1,0 +1,29 @@
+{
+  "items": [],
+  "feedUrl": "https://elfrente.com.co/web-stories/feed/",
+  "image": {
+    "link": "https://elfrente.com.co",
+    "url": "https://elfrente.com.co/nI-PEf-23/wp-content/uploads/2023/02/cropped-favicon-80-32x32.png",
+    "title": "Historias – EL FRENTE",
+    "width": "32",
+    "height": "32"
+  },
+  "paginationLinks": {
+    "self": "https://elfrente.com.co/web-stories/feed/"
+  },
+  "title": "Historias – EL FRENTE",
+  "description": "80 Años",
+  "generator": "https://wordpress.org/?v=6.2.2",
+  "link": "https://elfrente.com.co",
+  "language": "es",
+  "lastBuildDate": "Mon, 19 Jun 2023 02:48:04 +0000",
+  "itunes": {
+    "owner": {
+      "name": "Historias – EL FRENTE"
+    },
+    "image": "https://elfrente.com.co/nI-PEf-23/wp-content/plugins/powerpress/itunes_default.jpg",
+    "author": "Historias – EL FRENTE",
+    "subtitle": "80 Años",
+    "summary": "80 Años"
+  }
+}
