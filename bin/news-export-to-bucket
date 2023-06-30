@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Directorio de salida
+output_dir="$(pwd)/datasets/news"
+
+# Tamaño máximo por archivo en MB
+max_file_size=100
+
+# Nombre base del archivo
+base_filename="news"
+
+# Obtener el timestamp actual
+timestamp=$(date +"%Y%m%d%H%M%S")
+
+# Nombre del archivo con el timestamp
+timestamp_filename="${base_filename}_${timestamp}"
+
+# Ejecutar el comando de exportación
+mongoexport --uri="mongodb+srv://aleoncre:645058001_Artemisa@newsbucket-ia.u4asa4e.mongodb.net/newsbucket" --collection=news --type=csv --out=temp.csv --fields=_id,_feed,link,title,content,content_encoded,creator,dc_creator,categories,pubDate,enclosure,imgs,createdAt,updatedAt,contentHash
+
+# Obtener el tamaño del archivo temporal en bytes
+file_size=$(wc -c < "temp.csv")
+
+# Calcular el tamaño máximo en bytes (100 MB)
+max_size=$((max_file_size * 1024 * 1024))
+
+# Verificar si el archivo temporal supera el tamaño máximo
+if [[ $file_size -gt $max_size ]]; then
+  # Dividir el archivo en múltiples archivos de tamaño máximo
+  split --bytes=$max_size --numeric-suffixes=1 --additional-suffix=".csv" "temp.csv" "$output_dir/$timestamp_filename"
+else
+  # Mover el archivo temporal al directorio de salida
+  mv "temp.csv" "$output_dir/$base_filename.csv"
+fi
