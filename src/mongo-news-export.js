@@ -2,7 +2,7 @@ const {New, Connection} = require('./mongoose-module');
 const fs = require('fs');
 const jsonexport = require('jsonexport');
 
-const chunkSize = 8000;
+const chunkSize = 1000;
 const query = {}; // Filtro de consulta (opcional)
 const csvOutputFilePath = 'temp.csv';
 
@@ -21,7 +21,7 @@ async function exportDocuments() {
 
             const documents = await New.find(query).skip(skip).limit(chunkSize);
 
-            const csvData = await new Promise((resolve, reject) => {
+            const csvData = await new Promise(async (resolve, reject) => {
                 // Mapear y escapar los documentos individualmente
                 const escapedDocuments = documents.map((doc) => {
                     const { encode } = require('html-entities');
@@ -43,28 +43,29 @@ async function exportDocuments() {
                         contentHash: doc.contentHash
                     };
                 });
-
-                const options = {
-                    // Serializar los datos correctamente
-                    rowDelimiter: '\n',
-                    // Agregar comillas alrededor de cada campo
-                    forceTextDelimiter: true,
-                };
-
-                // Convertir los documentos a formato CSV utilizando jsonexport
-                jsonexport(escapedDocuments, options, (err, csv) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(csv);
-                    }
-                });
             });
 
-            console.log(csvData);
+            const options = {
+                // Serializar los datos correctamente
+                textDelimiter: '"',
+                rowDelimiter: ',',
+                endOfLine: '\n',
+                // Agregar comillas alrededor de cada campo
+                forceTextDelimiter: true,
+                includeHeaders: true,
+            };
 
-            // Escribir los datos CSV en el stream de salida
-            outputCsvStream.write(csvData);
+            // Convertir los documentos a formato CSV utilizando jsonexport
+
+            try {
+                const csv = await jsonexport(
+                    csvData,
+                    options
+                );
+                outputCsvStream.write(csv.toString());
+            } catch (err) {
+                console.error(err);
+            }
 
             console.log(`Chunk ${i + 1}/${numChunks} procesado.`);
         }
