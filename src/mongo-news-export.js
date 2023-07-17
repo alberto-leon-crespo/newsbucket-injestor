@@ -1,13 +1,50 @@
 const {New, Connection} = require('./mongoose-module');
 const fs = require('fs');
+const path = require('path');
 const jsonexport = require('jsonexport');
 
-const chunkSize = 1000;
+const chunkSize = 8000;
 const query = {}; // Filtro de consulta (opcional)
 const csvOutputFilePath = 'temp.csv';
+const csvOutputSplitFilePath = path.resolve(`${process.cwd()}`, 'datasets', 'news');
 
 if (fs.existsSync(csvOutputFilePath)) {
     fs.rmSync(csvOutputFilePath);
+}
+
+if (!fs.existsSync(csvOutputSplitFilePath)) {
+    fs.mkdirSync(csvOutputSplitFilePath, {recursive: true});
+}
+
+async function splitFileByLines(inputFile, outputDir, linesPerChunk) {
+    const inputStream = fs.createReadStream(inputFile);
+    const lineReader = readline.createInterface({ input: inputStream });
+
+    let lineNumber = 0;
+    let chunkNumber = 1;
+    let chunkLines = [];
+
+    lineReader.on('line', (line) => {
+        lineNumber++;
+        chunkLines.push(line);
+
+        if (lineNumber % linesPerChunk === 0) {
+            const chunkFileName = `${outputDir}/chunk_${chunkNumber}.txt`;
+            fs.writeFileSync(chunkFileName, chunkLines.join('\n'));
+            chunkNumber++;
+            chunkLines = [];
+        }
+    });
+
+    lineReader.on('close', () => {
+        // Escribir la última parte si quedaron líneas sin procesar
+        if (chunkLines.length > 0) {
+            const chunkFileName = `${outputDir}/chunk_${chunkNumber}.txt`;
+            fs.writeFileSync(chunkFileName, chunkLines.join('\n'));
+        }
+
+        console.log('Archivo dividido en partes por líneas.');
+    });
 }
 
 async function exportDocuments() {
@@ -73,6 +110,9 @@ async function exportDocuments() {
         }
 
         console.log('Conversión a CSV completada.');
+
+        await splitFileByLines(csvOutputFilePath, csvOutputSplitFilePath, 8000);
+
         process.exit(0);
     } catch (error) {
         console.error(`Error durante la exportación: ${error.message}. Stack: ${error.stack}.`);
