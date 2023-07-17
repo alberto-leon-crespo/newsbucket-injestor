@@ -43,6 +43,8 @@ async function exportDocuments() {
                         contentHash: doc.contentHash
                     };
                 });
+
+                resolve(escapedDocuments);
             });
 
             const options = {
@@ -63,14 +65,15 @@ async function exportDocuments() {
                     options
                 );
                 outputCsvStream.write(csv.toString());
+                console.log(`Chunk ${i + 1}/${numChunks} procesado.`);
             } catch (err) {
                 console.error(err);
             }
 
-            console.log(`Chunk ${i + 1}/${numChunks} procesado.`);
         }
 
         console.log('Conversión a CSV completada.');
+        process.exit(0);
     } catch (error) {
         console.error(`Error durante la exportación: ${error.message}. Stack: ${error.stack}.`);
     }
