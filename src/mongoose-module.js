@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
-const uri = "mongodb+srv://aleoncre:645058001_Artemisa@newsbucket-ia.u4asa4e.mongodb.net/newsbucket?retryWrites=true&w=majority";
+const uri = process.env.MONGO_URI;
 let connection;
 
 (async () => {

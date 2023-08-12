@@ -1,8 +1,11 @@
 const puppeteer = require('puppeteer');
 const {Feed, Media} = require('./mongoose-module');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 async function scrapeFeeds(mediaList) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({headless: process.env.PUPPETEER_HEADLESS});
   const scrapedMedia = [];
 
   for (const media of mediaList) {

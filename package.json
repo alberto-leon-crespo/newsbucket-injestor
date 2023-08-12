@@ -1,6 +1,6 @@
 {
   "name": "newsbucket.ia",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Feed and news aggregator to make news trusted and verified",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,8 @@
     "retrieve-feeds-news": "node src/news_reader.js",
     "export-news": "node src/mongo-news-export.js",
     "read-fake-news": "node src/read-fact-checks.js",
-    "release": "standard-version"
+    "release": "standard-version",
+    "release:next-version": "standard-version --dry-run"
   },
   "author": "Alberto León",
   "license": "ISC",
@@ -17,6 +18,7 @@
     "axios": "^1.4.0",
     "cheerio": "^1.0.0-rc.12",
     "dayjs": "^1.11.8",
+    "dotenv": "^16.3.1",
     "html-entities": "^2.4.0",
     "jsonexport": "^3.2.0",
     "md5": "^2.3.0",

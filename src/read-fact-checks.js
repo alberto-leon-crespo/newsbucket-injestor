@@ -1,6 +1,9 @@
 const puppeteer = require('puppeteer');
 const {New, FakeNew} = require("./mongoose-module");
 const md5 = require('md5');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 (async () => {
     // Iniciar el navegador
