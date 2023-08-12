@@ -7,7 +7,7 @@ dotenv.config();
 
 (async () => {
     // Iniciar el navegador
-    const browser = await puppeteer.launch({headless: false});
+    const browser = await puppeteer.launch({headless: process.env.PUPPETEER_HEADLESS});
     const page = await browser.newPage();
 
     // Navegar a la página web de ejemplo
