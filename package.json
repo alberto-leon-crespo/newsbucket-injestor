@@ -8,7 +8,8 @@
     "retrieve-feeds-urls": "node src/feed_scrapper.js",
     "retrieve-feeds-news": "node src/news_reader.js",
     "export-news": "node src/mongo-news-export.js",
-    "read-fake-news": "node src/read-fact-checks.js"
+    "read-fake-news": "node src/read-fact-checks.js",
+    "release": "standard-version"
   },
   "author": "Alberto León",
   "license": "ISC",
@@ -25,5 +26,8 @@
     "puppeteer": "^21.0.3",
     "rss-parser": "^3.13.0",
     "shelljs": "^0.8.5"
+  },
+  "devDependencies": {
+    "standard-version": "^9.5.0"
   }
 }
