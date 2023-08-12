@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/alberto-leon-crespo/newsbucket-injestor/compare/v1.2.0...v1.2.1) (2023-08-12)
+
+
+### Bug Fixes
+
+* modified mongoose module to prevent process.env read error ([ef897f5](https://github.com/alberto-leon-crespo/newsbucket-injestor/commit/ef897f59e07c7cc98ee03fc119094e8e61ecc8fd))
+
 ## [1.2.0](https://github.com/alberto-leon-crespo/newsbucket-injestor/compare/v1.1.0...v1.2.0) (2023-08-12)
 
 
