@@ -15,9 +15,10 @@ async function readFeeds() {
     const news = await fetchNews(feeds);
     const savingCount = await saveNewsToMongo(news);
     console.log('Proceso completado. Se ha actualizado la colección de noticias. Se han leido un total de ' + feeds.length + ' feeds y se han grabado un total de ' + savingCount + ' noticias.');
-    return Promise.resolve();
+    process.exit(0);
   } catch (error) {
     Promise.reject(error);
+    process.exit(-1);
   }
 }
 
