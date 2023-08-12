@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/alberto-leon-crespo/newsbucket-injestor/compare/v1.1.0...v1.2.0) (2023-08-12)
+
+
+### Features
+
+* added dotenv to manage config and .env files ([ba6a56c](https://github.com/alberto-leon-crespo/newsbucket-injestor/commit/ba6a56ca237cdbb5d8630458d3e5f616f3cf852c))
+
 ## 1.1.0 (2023-08-12)
 
 
