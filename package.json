@@ -9,7 +9,8 @@
     "retrieve-feeds-news": "node src/news_reader.js",
     "export-news": "node src/mongo-news-export.js",
     "read-fake-news": "node src/read-fact-checks.js",
-    "release": "standard-version"
+    "release": "standard-version",
+    "release:next-version": "standard-version --dry-run"
   },
   "author": "Alberto León",
   "license": "ISC",
