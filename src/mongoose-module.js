@@ -47,14 +47,26 @@ const newSchema = new Schema({
     pubDate: { type: Date },
     comments: { type: String },
     enclosure: { type: Object },
-    contentHash: { type: String },
+    content_hash: { type: String },
     imgs: { type: Array, default: [] },
+    createdAt: {type: Date, default: (new Date()).toISOString()},
+    updatedAt: {type: Date, default: (new Date()).toISOString()},
+});
+
+const fakeNewSchema = new Schema({
+    _id: { type: Schema.ObjectId, auto: true },
+    title: { type: String },
+    content: { type: String },
+    link: { type: String },
+    imgs: { type: Array, default: [] },
+    content_hash: { type: String },
     createdAt: {type: Date, default: (new Date()).toISOString()},
     updatedAt: {type: Date, default: (new Date()).toISOString()},
 });
 
 const Feed = mongoose.model('Feed', feedSchema, 'feeds');
 const Media = mongoose.model('Media', mediaSchema, 'medias');
-const New = mongoose.model('News', newSchema, 'news');
+const New = mongoose.model('New', newSchema, 'news');
+const FakeNew = mongoose.model('FakeNew', fakeNewSchema, 'fake_news');
 
-module.exports = {Feed, Media, New, Connection: () => getConnection() }
+module.exports = {Feed, Media, New, FakeNew, Connection: () => getConnection() }

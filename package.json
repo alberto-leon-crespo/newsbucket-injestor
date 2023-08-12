@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "retrieve-feeds-urls": "node src/feed_scrapper.js",
     "retrieve-feeds-news": "node src/news_reader.js",
-    "export-news": "node src/mongo-news-export.js"
+    "export-news": "node src/mongo-news-export.js",
+    "read-fake-news": "node src/read-fact-checks.js"
   },
   "author": "Alberto León",
   "license": "ISC",
@@ -21,6 +22,7 @@
     "md5.js": "^1.3.5",
     "mongoose": "^7.3.0",
     "object-hash": "^3.0.0",
+    "puppeteer": "^21.0.3",
     "rss-parser": "^3.13.0",
     "shelljs": "^0.8.5"
   }
