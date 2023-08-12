@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "retrieve-feeds-urls": "node src/feed_scrapper.js",
-    "retrieve-feeds-news": "node src/news_reader.js"
+    "retrieve-feeds-news": "node src/news_reader.js",
+    "export-news": "node src/mongo-news-export.js"
   },
   "author": "Alberto León",
   "license": "ISC",

@@ -1,122 +1,41 @@
-const {New, Connection} = require('./mongoose-module');
+const {New} = require('./mongoose-module');
 const fs = require('fs');
-const path = require('path');
-const jsonexport = require('jsonexport');
 
-const chunkSize = 8000;
-const query = {}; // Filtro de consulta (opcional)
-const csvOutputFilePath = 'temp.csv';
-const csvOutputSplitFilePath = path.resolve(`${process.cwd()}`, 'datasets', 'news');
-
-if (fs.existsSync(csvOutputFilePath)) {
-    fs.rmSync(csvOutputFilePath);
+if (!fs.existsSync('datasets/news')) {
+    fs.mkdirSync('datasets/news');
 }
 
-if (!fs.existsSync(csvOutputSplitFilePath)) {
-    fs.mkdirSync(csvOutputSplitFilePath, {recursive: true});
-}
+const writeStream = fs.createWriteStream('datasets/news/noticias.csv');
 
-async function splitFileByLines(inputFile, outputDir, linesPerChunk) {
-    const inputStream = fs.createReadStream(inputFile);
-    const lineReader = readline.createInterface({ input: inputStream });
+// Escribe el encabezado en el archivo CSV
+writeStream.write('"_id","_feed","createdAt","creator","pubDate","updatedAt","__v","categories","dc_creator","title","content","enclosure","contentHash","content_encoded","imgs","link"\n');
 
-    let lineNumber = 0;
-    let chunkNumber = 1;
-    let chunkLines = [];
+const CHUNK_SIZE = 8000;
 
-    lineReader.on('line', (line) => {
-        lineNumber++;
-        chunkLines.push(line);
-
-        if (lineNumber % linesPerChunk === 0) {
-            const chunkFileName = `${outputDir}/chunk_${chunkNumber}.txt`;
-            fs.writeFileSync(chunkFileName, chunkLines.join('\n'));
-            chunkNumber++;
-            chunkLines = [];
-        }
-    });
-
-    lineReader.on('close', () => {
-        // Escribir la última parte si quedaron líneas sin procesar
-        if (chunkLines.length > 0) {
-            const chunkFileName = `${outputDir}/chunk_${chunkNumber}.txt`;
-            fs.writeFileSync(chunkFileName, chunkLines.join('\n'));
-        }
-
-        console.log('Archivo dividido en partes por líneas.');
-    });
-}
-
-async function exportDocuments() {
+async function writeInChunks() {
     try {
-        const totalDocuments = await New.countDocuments(query);
-        const numChunks = Math.ceil(totalDocuments / chunkSize);
-        const outputCsvStream = fs.createWriteStream(csvOutputFilePath);
+        // Conexión a MongoDB
+        const count = await New.countDocuments({});
+        let processed = 0;
 
-        for (let i = 0; i < numChunks; i++) {
-            const skip = i * chunkSize;
-
-            const documents = await New.find(query).skip(skip).limit(chunkSize);
-
-            const csvData = await new Promise(async (resolve, reject) => {
-                // Mapear y escapar los documentos individualmente
-                const escapedDocuments = documents.map((doc) => {
-                    const { encode } = require('html-entities');
-                    return {
-                        _id: doc._id,
-                        _feed: doc._feed,
-                        link: doc.link,
-                        title: doc.title,
-                        content: encode(doc.content),
-                        content_encoded: encode(doc.content_encoded),
-                        creator: doc.creator,
-                        dc_creator: doc.dc_creator,
-                        categories: doc.categories,
-                        pubDate: doc.pubDate,
-                        enclosure: doc.enclosure,
-                        imgs: doc.imgs,
-                        createdAt: doc.createdAt,
-                        updatedAt: doc.updatedAt,
-                        contentHash: doc.contentHash
-                    };
-                });
-
-                resolve(escapedDocuments);
-            });
-
-            const options = {
-                // Serializar los datos correctamente
-                textDelimiter: '"',
-                rowDelimiter: ',',
-                endOfLine: '\n',
-                // Agregar comillas alrededor de cada campo
-                forceTextDelimiter: true,
-                includeHeaders: true,
-            };
-
-            // Convertir los documentos a formato CSV utilizando jsonexport
-
-            try {
-                const csv = await jsonexport(
-                    csvData,
-                    options
-                );
-                outputCsvStream.write(csv.toString());
-                console.log(`Chunk ${i + 1}/${numChunks} procesado.`);
-            } catch (err) {
-                console.error(err);
+        while (processed < count) {
+            const newsList = await New.find({}).skip(processed).limit(CHUNK_SIZE);
+            for (const news of newsList) {
+                const csvLine = `"${news._id}","${news._feed}","${news.createdAt}","${news.creator}","${news.pubDate}","${news.updatedAt}","${news.__v}","${news.categories.join('|')}","${news.dc_creator}","${news.title}","${news.content}","${news.enclosure}","${news.contentHash}","${news.content_encoded}","${news.imgs.join('|')}","${news.link}"\n`;
+                writeStream.write(csvLine);
             }
 
+            processed += CHUNK_SIZE;
+            console.log(`Procesados ${processed} de ${count} registros`);
         }
 
-        console.log('Conversión a CSV completada.');
-
-        await splitFileByLines(csvOutputFilePath, csvOutputSplitFilePath, 8000);
-
+        writeStream.end();
+        console.log('CSV escrito exitosamente');
         process.exit(0);
-    } catch (error) {
-        console.error(`Error durante la exportación: ${error.message}. Stack: ${error.stack}.`);
+    } catch (err) {
+        console.error('Error:', err);
+        writeStream.end();
     }
 }
 
-exportDocuments();
+writeInChunks();
