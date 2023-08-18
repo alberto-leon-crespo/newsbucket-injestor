@@ -1,5 +1,5 @@
 node_modules
 .idea
 temp.csv
-datasets/news/news*.csv
+datasets/news/news*.json
 .env

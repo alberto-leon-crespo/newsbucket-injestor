@@ -2,7 +2,7 @@ const fs = require('fs');
 const { Transform } = require('stream');
 const { New } = require('./mongoose-module');
 const { BigQuery } = require('@google-cloud/bigquery');
-const { AllHtmlEntities } = require('html-entities');
+const htmlenties = require('html-entities');
 
 let isHistoryMode = false;
 for (let i = 0; i < process.argv.length; i++) {
@@ -20,67 +20,59 @@ if (!isHistoryMode) {
 }
 
 const CHUNK_SIZE = 8000;
-const htmlEntities = new AllHtmlEntities();
+function isHTML(texto) {
+    const patronHTML = /<[^>]+>/;
+    return patronHTML.test(texto);
+}
 
 async function writeInChunks() {
+    const chunksPaths = [];
     try {
-        const count = await New.countDocuments(dateFilter);
-        let processed = 0;
-        let chunkNumber = 1;
-        const currentDate = new Date().toISOString().split('T')[0];
+        const currentDate = (new Date()).toISOString().split('T')[0];
+        const totalCount = await New.countDocuments(dateFilter);
+        const totalChunks = Math.ceil(totalCount / CHUNK_SIZE);
+        let processedCount = 0;
 
-        const jsonTransform = new Transform({
-            writableObjectMode: true,
-            transform(chunk, encoding, callback) {
-                this.push(JSON.stringify({
-                    _id: chunk._id || '',
-                    _feed: chunk._feed || '',
-                    createdAt: chunk.createdAt || '',
-                    // ... otros campos ...
-                    content: htmlEntities.encode(chunk.content || ''),
-                    // ... otros campos ...
-                }) + ',\n');
-                callback();
+        for (let chunkNumber = 1; chunkNumber <= totalChunks; chunkNumber++) {
+            const chunkPath = `datasets/news/news-${currentDate}-${chunkNumber}.json`;
+
+            if (fs.existsSync(chunkPath)) {
+                fs.unlinkSync(chunkPath);
             }
-        });
 
-        const writeStream = fs.createWriteStream(`datasets/news/news-${currentDate}-${chunkNumber}.json`);
-        writeStream.write('[\n');
+            const offset = (chunkNumber - 1) * CHUNK_SIZE;
+            const chunkData = await New.find(dateFilter).skip(offset).limit(CHUNK_SIZE).cursor();
+            const writeData = [];
 
-        const readStream = New.find(dateFilter).cursor();
-
-        readStream.on('data', (news) => {
-            jsonTransform.write(news);
-            processed++;
-            if (processed % CHUNK_SIZE === 0) {
-                const progress = `${processed}/${count}`;
-                console.log(`Progreso: ${progress}`);
+            for await (const newObject of chunkData) {
+                writeData.push({
+                    id: newObject._id.toString(),
+                    content: newObject.content,
+                    createdAt: new Date(newObject.createdAt),
+                    updatedAt: new Date(newObject.updatedAt),
+                    title: htmlenties.encode(newObject.title),
+                    link: htmlenties.encode(newObject.link),
+                    imgs: (() => {
+                        if (newObject.imgs && newObject.imgs.length > 0) {
+                            return newObject.imgs.map(imageUrl => encodeURI(imageUrl));
+                        }
+                        return newObject.imgs;
+                    })()
+                });
+                processedCount++;
             }
-        });
 
-        readStream.on('end', () => {
-            jsonTransform.end();
-        });
+            writeData.forEach(object => {
+                fs.appendFileSync(chunkPath, JSON.stringify(object) + '\n');
+            });
 
-        jsonTransform.pipe(writeStream, { end: false });
+            chunksPaths.push(chunkPath);
 
-        jsonTransform.on('finish', () => {
-            jsonTransform.unpipe(writeStream);
-            writeStream.end('\n]'); // Cierra el array
-            console.log(`Archivo JSON-${chunkNumber} escrito exitosamente`);
-            chunkNumber++;
-            if (processed < count) {
-                writeStream = fs.createWriteStream(`datasets/news/news-${currentDate}-${chunkNumber}.json`);
-                writeStream.write('[\n');
-                jsonTransform.pipe(writeStream, { end: false });
-            } else {
-                mergeJsonChunks(currentDate, chunkNumber);
-            }
-        });
+            const progress = `${processedCount}/${totalCount}\r`;
+            process.stdout.write(`Progreso: ${progress}`);
+        }
 
-        jsonTransform.on('error', (err) => {
-            console.error('Error en la transformación:', err);
-        });
+        return chunksPaths;
 
     } catch (err) {
         console.error('Error:', err);
@@ -88,47 +80,46 @@ async function writeInChunks() {
     }
 }
 
-function mergeJsonChunks(date, totalChunks) {
-    const mergedData = [];
-
-    for (let i = 1; i <= totalChunks; i++) {
-        const chunkData = fs.readFileSync(`datasets/news/news-${date}-${i}.json`, 'utf8');
-        const parsedData = JSON.parse(chunkData);
-        mergedData.push(...parsedData);
-    }
-
-    fs.writeFileSync(`datasets/news/news-${date}.json`, JSON.stringify(mergedData));
-    console.log(`Archivos JSON fusionados exitosamente en news-${date}.json`);
-
-    loadJsonToBigQuery(`datasets/news/news-${date}.json`);
-}
-
-async function loadJsonToBigQuery(filename) {
+async function loadJsonFilesToBigQuery(filePaths) {
     const projectId = "newbucket-ia";
     const datasetId = "newsbucketia";
     const tableId = "news";
 
-    const bigquery = new BigQuery({ projectId });
 
-    const metadata = {
-        sourceFormat: 'NEWLINE_DELIMITED_JSON',
-        autodetect: true,
-        writeDisposition: isHistoryMode ? 'WRITE_TRUNCATE' : 'WRITE_APPEND'
-    };
+    for(let index=0; index <= filePaths.length; index++) {
+        const bigquery = new BigQuery({ projectId });
+        if (index === 0 && isHistoryMode) {
+            const metadata = {
+                autodetect: true,
+                writeDisposition: 'WRITE_TRUNCATE'
+            };
+            const [job] = await bigquery
+                .dataset(datasetId)
+                .table(tableId)
+                .load(filePaths[index], metadata);
 
-    const [job] = await bigquery
-        .dataset(datasetId)
-        .table(tableId)
-        .load(filename, metadata);
+            console.log(`Fichero ${filePaths[index]} subido correctamente. Job ${job.id} completado`);
+        } else {
+            const metadata = {
+                autodetect: true,
+                writeDisposition: 'WRITE_APPEND'
+            };
+            const [job] = await bigquery
+                .dataset(datasetId)
+                .table(tableId)
+                .load(filePaths[index], metadata);
 
-    console.log(`Job ${job.id} completado.`);
+            console.log(`Fichero ${filePaths[index]} subido correctamente. Job ${job.id} completado`);
+        }
+    }
 }
 
 async function main() {
     try {
-        console.log('Generando archivos JSON por chunks...');
-        await writeInChunks();
-
+        console.log(`\nGenerando archivos JSON en trozos de ${CHUNK_SIZE}...`);
+        const chunksPaths = await writeInChunks();
+        await loadJsonFilesToBigQuery(chunksPaths);
+        process.exit(0);
     } catch (err) {
         console.error('Error:', err);
     }
