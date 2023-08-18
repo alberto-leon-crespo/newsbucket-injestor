@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "newbucket-ia",
+  "private_key_id": "a3f3d2ad30bdd510523f182996c398716dc01180",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQC3vfVZp0DHwyuB\nPkczvHzoc5GCgtR2GkagheeV4glP40mwC5HNyTxpb0L6uRXRAnjXr3mPU3UuOTIs\nwHWjIdiRrW8tZ+ZsaDV4f5Tc3Kqphh/GZmBJQsJOTwcHnG++hmPvYI6zTg+IdIFk\nbPzU9AmZnX9YpGLmBHoPlijPCLfN1rkny2FBAClVmUoDKD5WuPiIy2okJ54TbkQX\nyRevyXGD4Scy5nEXK+aAkLoIUrcBxsIYef2T5WJHdwfaNgmw8C5+ZzHwk50/vYEx\n/ARR20rbOHKANDIRvJ1D6DtMmGn9+v6bp39bW4dGIeU0hZ/YvLpraeHQ5UZq6aTd\nDTjRf+gpAgMBAAECgf9+6zgO4E5fA5w0KlCvQVkGjXh1g5Q+qufI+gsop89xig6H\nDCGALwEL007w4T2woi8sIomqodDPnQfg4bsLHtX5yqiBNMPLHjB74PodlaT3ydh+\nXePPYc3V9Gtmq9Mu8qW/3sgIvbhSXtJXYZvuJ/kkTdEpPw5m1Ft8E2fHmr4Gmp+B\nMpAU1FHpIgNeCy7/7IWKm54sJ6Bj6iIQSnhTYxS1qx5qPFfBzVoSXiBFLbYW/sJk\nm1ItwcjsDu0CZHUDqPNhUsBYv5T9IAT5fM3dWExaMDTZM/ZgEbp1hzmOan5AXUpP\n3CLcUfgS1LedFFf9F9J7qThtai+NqD15wQJkpQ8CgYEA5buOBOpziBYGYRwitNA3\nB/dKV11zsxGRzFuC8NR1uHUrUEEOnhVgab4PDFyTObIib7NC29f9aWGow2T5r2kR\nF5d1iOeuMpKtXWTC6nX1ClB2D2D3y4NDqd2Uq5EcE/Iul8soi1DbpIm1Pr6kSAJc\nElCuKmU1a9flwScMO6qLf4MCgYEAzMA5ZwiHtK+Yz5FIx/RgXuJjKkHYKPOQ6abo\n9+EVXbaF1OTIfdhTaaPJiQml8LzijLTKfIZ4T729HYN+RWyePD4h97Aa19/qPynd\nfjR5rkfxl+jWXvapDp+fDsP3zP83eGn5mXt7jEUJyUkOCsUYyYhMrG9aCPJOvppD\n2IF0HeMCgYEAr9gkGPcsf5n8QBC9MBHATcSnjr/lc8ebBgV18MlvYkWtZbymZ7KN\nHeNwuVGTD7KeUUmxf32QZz1tZELCK9YMUzaHrMdJu0Qyly4tVDH94ms8MwFSKuDK\nxhbpWXm1OD9EEsRawGif9w3BQcnDDatgtlQzPBhED8wt/O7amkEsjekCgYBgnON5\nJqFCNQlaCCfbkghXPWOlcORajnN2jPeo32CBk7qatkmUeBsD4fEa5J6UdcxAsJ5L\nG/hxSAqQfpd6ksInkvncMhC4hEO4Aj0ta/1uqyvojkl5DdK/v7oB8Z5f8J1wCDFq\npsWpbnorrHkfw9jqX5IuW2yUhCF79rbE1nDAGQKBgGKZ2jAyJhvUIc6cJHrz+GSF\nat7mv9RI3jXlmcgKFOroGKgRa1ksg9U4pHH8KQ2ChP/IbzoVMewYliBthAWH6Z9u\n/dBh3kMku/aObC9PLJfSOT54ojgrSHf1rT335/XB0+bT29/WyGYWoiP+9EoODOe5\nzDc+nGvO21EMDNAx6tdi\n-----END PRIVATE KEY-----\n",
+  "client_email": "news-bucket-exporter@newbucket-ia.iam.gserviceaccount.com",
+  "client_id": "108827051169979074461",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/news-bucket-exporter%40newbucket-ia.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
