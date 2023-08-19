@@ -2,4 +2,5 @@ node_modules
 .idea
 temp.csv
 datasets/news/news*.json
+datasets/images
 .env

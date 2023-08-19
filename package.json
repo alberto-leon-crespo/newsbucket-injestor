@@ -8,6 +8,7 @@
     "retrieve-feeds-urls": "node src/feed_scrapper.js",
     "retrieve-feeds-news": "node src/news_reader.js",
     "export-news": "node src/mongo-news-export.js",
+    "read-news-images-metadata": "node src/read-news-images-matadata.js",
     "read-fake-news": "node src/read-fact-checks.js",
     "release": "standard-version",
     "release:next-version": "standard-version --dry-run"
@@ -21,6 +22,7 @@
     "csv-writer": "^1.6.0",
     "dayjs": "^1.11.8",
     "dotenv": "^16.3.1",
+    "exif-parser": "^0.1.12",
     "he": "^1.2.0",
     "html-entities": "^2.4.0",
     "jsonexport": "^3.2.0",

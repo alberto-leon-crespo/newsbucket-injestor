@@ -67,9 +67,20 @@ const fakeNewSchema = new Schema({
     updatedAt: {type: Date, default: (new Date()).toISOString()},
 });
 
+const imageMetadata = new Schema({
+    _id: { type: Schema.ObjectId, auto: true },
+    _new: { type: Schema.ObjectId },
+    metadata: { type: Schema.Types.Mixed, required: true },
+    latitude: { type: Number, required: false },
+    longitude: { type: Number, required: false },
+    createdAt: {type: Date, default: (new Date()).toISOString()},
+    updatedAt: {type: Date, default: (new Date()).toISOString()},
+});
+
 const Feed = mongoose.model('Feed', feedSchema, 'feeds');
 const Media = mongoose.model('Media', mediaSchema, 'medias');
 const New = mongoose.model('New', newSchema, 'news');
 const FakeNew = mongoose.model('FakeNew', fakeNewSchema, 'fake_news');
+const ImageMetadata = mongoose.model('ImageMetadata', imageMetadata, 'images_metadata');
 
-module.exports = {Feed, Media, New, FakeNew, Connection: () => getConnection() }
+module.exports = {Feed, Media, New, FakeNew, ImageMetadata, Connection: () => getConnection() }
