@@ -4,7 +4,7 @@ const ExifParser = require('exif-parser');
 const axios = require('axios');
 const { New, ImageMetadata } = require('./mongoose-module');
 
-const CHUNK_SIZE = 8000;
+const CHUNK_SIZE = 200;
 
 function isDMSFormat(coordinate) {
     // Verificar si la cadena contiene los símbolos de DMS
