@@ -1,6 +1,20 @@
-        # Changelog
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.3.0](https://github.com/alberto-leon-crespo/newsbucket-injestor/compare/v1.2.1...v1.3.0) (2023-09-20)
+
+
+### Features
+
+* Added script to  daily export fake-news to bigquery. Last modificacitions to export-news script to best handling of files. ([db95301](https://github.com/alberto-leon-crespo/newsbucket-injestor/commit/db95301c576cace4f754a80bfd9b5bfbdac5c18a))
+* added script to daily export news to bigquery ([f7254f6](https://github.com/alberto-leon-crespo/newsbucket-injestor/commit/f7254f6f0b4d6dcc2641db32e22404056fb5550e))
+* added script to extract metadata from news images ([4aecb4a](https://github.com/alberto-leon-crespo/newsbucket-injestor/commit/4aecb4a9f2fff7b1f2033d9bee55e40578dae763))
+
+
+### Bug Fixes
+
+* reduced chunk size to prevent cursor timeout error ([d720184](https://github.com/alberto-leon-crespo/newsbucket-injestor/commit/d72018439749e9c811973e14cd72f0d0e1d08017))
 
 ### [1.2.1](https://github.com/alberto-leon-crespo/newsbucket-injestor/compare/v1.2.0...v1.2.1) (2023-08-12)
 
