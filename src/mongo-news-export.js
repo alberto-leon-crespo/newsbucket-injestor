@@ -85,8 +85,7 @@ async function loadJsonFilesToBigQuery(filePaths) {
     const datasetId = "newsbucketia";
     const tableId = "news";
 
-
-    for(let index=0; index <= filePaths.length; index++) {
+    for(let index=0; index < filePaths.length; index++) {
         const bigquery = new BigQuery({ projectId });
         if (index === 0 && isHistoryMode) {
             const metadata = {
@@ -112,12 +111,16 @@ async function loadJsonFilesToBigQuery(filePaths) {
             console.log(`Fichero ${filePaths[index]} subido correctamente. Job ${job.id} completado`);
         }
     }
+    return;
 }
 
 async function main() {
     try {
         console.log(`\nGenerando archivos JSON en trozos de ${CHUNK_SIZE}...`);
         const chunksPaths = await writeInChunks();
+        console.log(`Se van a subir a bigquery los siguientes ficheros:\n`);
+        console.log(chunksPaths.join('\n'));
+        console.log(`\n`)
         await loadJsonFilesToBigQuery(chunksPaths);
         process.exit(0);
     } catch (err) {
