@@ -2,5 +2,6 @@ node_modules
 .idea
 temp.csv
 datasets/news/news*.json
-datasets/images
+datasets/fake-news/fake-news*.json
+datasets/feeds/feeds*.json
 .env
