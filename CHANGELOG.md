@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/alberto-leon-crespo/newsbucket-injestor/compare/v1.3.0...v1.4.0) (2023-09-22)
+
+
+### Features
+
+* added country and type to feeds bigquery table export ([34d7903](https://github.com/alberto-leon-crespo/newsbucket-injestor/commit/34d7903c3ae8683e9b1aef461e617833aecd8a9c))
+* added export feeds script ([5c3d496](https://github.com/alberto-leon-crespo/newsbucket-injestor/commit/5c3d496a5411bcfd6d5d10899206270eaef61ded))
+* added script to update feeds with country and type reading media collection ([1d18490](https://github.com/alberto-leon-crespo/newsbucket-injestor/commit/1d18490d484acc371e0037d932172397a8cb593b))
+* updated feed schema to include country and type ([4496f23](https://github.com/alberto-leon-crespo/newsbucket-injestor/commit/4496f23b8e88071c26d2806615b49b5f88f13c7f))
+
 ## [1.3.0](https://github.com/alberto-leon-crespo/newsbucket-injestor/compare/v1.2.1...v1.3.0) (2023-09-20)
 
 
