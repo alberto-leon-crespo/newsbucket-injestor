@@ -30,6 +30,8 @@ const feedSchema = new Schema({
     _id: { type: Schema.ObjectId, auto: true },
     name: {type: String, required: true}, // String is shorthand for {type: String}
     url: {type: String, required: true},
+    country: {type: String, required: true},
+    type: {type: String, required: true},
     createdAt: {type: Date, default: (new Date()).toISOString()},
     updatedAt: {type: Date, default: (new Date()).toISOString()},
 });
