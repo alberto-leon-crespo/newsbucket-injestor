@@ -9,6 +9,7 @@
     "retrieve-feeds-news": "node src/news_reader.js",
     "export-news": "node src/mongo-news-export.js",
     "export-fake-news": "node src/mongo-fake-news-export.js",
+    "export-feeds": "node src/mongo-feeds-export.js",
     "read-news-images-metadata": "node src/read-news-images-matadata.js",
     "read-fake-news": "node src/read-fact-checks.js",
     "release": "standard-version",
