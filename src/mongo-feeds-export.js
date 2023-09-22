@@ -49,6 +49,8 @@ async function writeInChunks() {
                     _id: newObject._id.toString(),
                     name: newObject.name,
                     url: newObject.url,
+                    country: newObject.country,
+                    type: newObject.type,
                     createdAt: new Date(newObject.createdAt),
                     updatedAt: new Date(newObject.updatedAt),
                 });
