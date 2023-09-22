@@ -46,7 +46,7 @@ async function writeInChunks() {
 
             for await (const newObject of chunkData) {
                 writeData.push({
-                    id: newObject._id.toString(),
+                    _id: newObject._id.toString(),
                     name: newObject.name,
                     url: newObject.url,
                     createdAt: new Date(newObject.createdAt),
