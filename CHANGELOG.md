@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/alberto-leon-crespo/newsbucket-injestor/compare/v1.4.0...v1.5.0) (2023-09-24)
+
+
+### Features
+
+* added newtral reader to enpower database fake news table ([b9e0520](https://github.com/alberto-leon-crespo/newsbucket-injestor/commit/b9e05200093f95cfd9aa064547283cf6ae8fad0e))
+
 ## [1.4.0](https://github.com/alberto-leon-crespo/newsbucket-injestor/compare/v1.3.0...v1.4.0) (2023-09-22)
 
 
