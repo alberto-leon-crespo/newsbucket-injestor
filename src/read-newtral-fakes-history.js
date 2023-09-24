@@ -4,9 +4,9 @@ const puppeteer = require("puppeteer");
 const md5 = require('md5');
 
 const getToken = async () => {
-    const response = await axios.get('https://www.newtral.es/wp-json/nwtfmg/v1/get-token', {
+    const response = await axios.get(process.env.NEWTRAL_TOKEN_URL, {
         headers: {
-            authorization: 'Basic MWo2N3U3azlnNzNwcGlxbG5zb2NicGFna2Y6b2tvcnZoMzJkbGZqazg3MHQyZnQxYXF2ZHY2YW83MXBzM3MwYWJwbDVzMXMxYnY2OGw4'
+            authorization: process.env.NEWTRAL_BASIC_AUTH
         }
     })
     if (response.status === 200) {
@@ -20,10 +20,15 @@ let apiToken = getToken();
 const getFakesPaginated = async (
     page = 1,
     per_page = 15,
-    startDate = '2018-01-01',
-    endDate = '2023-09-24'
+    start_date = '2018-01-01',
+    end_date = '2023-09-24'
 ) => {
-    const response = await axios.get(`https://www.newtral.es/wp-json/nwtfmg/v1/fakes?page=${page}&posts_per_page=${per_page}&firstDate=${startDate}&lastDate=${endDate}`);
+    const newtralUrl = process.env.NEWTRAL_FAKES_URL
+        .replace(':page', page)
+        .replace(':per_page', per_page)
+        .replace(':start_date', start_date)
+        .replace(':end_date', end_date)
+    const response = await axios.get(newtralUrl);
     if (response.status === 200) {
         return response.data;
     }
