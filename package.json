@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "retrieve-feeds-urls": "node src/feed_scrapper.js",
     "retrieve-feeds-news": "node src/news_reader.js",
+    "retrieve-newtral-fakes-history": "node src/read-newtral-fakes-history.js",
     "complete-feed": "node src/complete-feed-with-country-and-type.js",
     "export-news": "node src/mongo-news-export.js",
     "export-fake-news": "node src/mongo-fake-news-export.js",
