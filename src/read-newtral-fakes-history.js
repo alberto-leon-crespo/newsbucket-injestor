@@ -28,31 +28,46 @@ const getFakesPaginated = async (
         .replace(':per_page', per_page)
         .replace(':start_date', start_date)
         .replace(':end_date', end_date)
-    const response = await axios.get(newtralUrl);
-    if (response.status === 200) {
-        return response.data;
+    try {
+        const response = await axios.get(newtralUrl);
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch (e) {
+        console.log(`Error getting paginated fake news page for newtral. Error status: ${e.response.status}.`);
+        if (e.response && e.response.data) {
+            console.log(`Error body response: ${JSON.stringify(e.response.data)}.`);
+        }
+        if (e.response.status === 401) {
+            axios.defaults.headers.common['Authorization'] = await getToken();
+            return getFakesPaginated(page, per_page, start_date, end_date);
+        }
+        return undefined;
     }
-    throw new Error(`Error getting paginated fake news page for newtral. Error status: ${response.status}. Error body response: ${JSON.stringify(response.data)}`)
 }
 
 const visitUrlAndRetrieveContent = async (url) => {
     const browser = await puppeteer.launch({headless: process.env.PUPPETEER_HEADLESS});
     const page = await browser.newPage();
+    try {
+        await page.goto(
+            url,
+            { waitUntil: 'networkidle0' }
+        );
+        const fakeContent = await page.evaluate(async () => {
+            const content =  document.querySelector(".entry-content").textContent;
+            return content.replace(/<img[^>]*>/g, '');
+        });
+        await page.close();
+        await browser.close();
+        return fakeContent
+    } catch (e) {
+        console.log(`Error retrieving url ${url}. Error: ${e.message}.`);
+        await page.close();
+        await browser.close();
+        return undefined;
+    }
 
-    // Navegar a la página web de ejemplo
-    await page.goto(
-        url,
-        { waitUntil: 'networkidle0' }
-    );
-
-    const fakeContent = await page.evaluate(async () => {
-        const content =  document.querySelector(".entry-content").textContent;
-        return content.replace(/<img[^>]*>/g, '');
-    });
-
-    await browser.close();
-
-    return fakeContent
 }
 
 const main = async () => {
@@ -65,30 +80,35 @@ const main = async () => {
         totalPages++;
     }
     for(let page= 1; page <= totalPages; page++) {
-        const response = await getFakesPaginated(page);
-        for(const fake of response.data) {
-            const title = fake.title;
-            const subtitle = fake.subtitle;
-            const link = fake.url;
-            const imgs = fake.alternateImage.data.url;
-            const content = await visitUrlAndRetrieveContent(link);
-            const contentHash = md5(`${title}\n${subtitle}\n${content}`);
-            const fakeNew = new FakeNew({
-                title: title + "\n" + subtitle,
-                content: content,
-                link: link,
-                imgs: [imgs],
-                content: imgs,
-                content_hash: contentHash
-            });
-            if ((await FakeNew.find({content_hash: contentHash}).exec()).length < 1) {
-                const saved = await fakeNew.save();
-                console.log(`Saved fake new with id #${saved._id.toString()}`);
-            } else {
-                console.log(`Discarted fake with content hash ${contentHash} because fake new with same content hash alredy exists on database.`)
+        const fakes = await getFakesPaginated(page);
+        if (fakes) {
+            for(const fake of fakes.data) {
+                const content = await visitUrlAndRetrieveContent(fake.url);
+                const contentHash = md5(`${fake.title}\n${fake.subtitle}\n${content}`);
+                if (content) {
+                    let image = '';
+                    if (fake && fake.alternateImage && fake.alternateImage.data && fake.alternateImage.data.url) {
+                        image = fake.alternateImage.data.url;
+                    }
+                    const fakeNew = new FakeNew({
+                        title: fake.title + "\n" + fake.subtitle,
+                        content: content,
+                        link: fake.url,
+                        imgs: [image],
+                        content_hash: md5(`${fake.title}\n${fake.subtitle}\n${content}`),
+                        history: true
+                    });
+                    if ((await FakeNew.find({content_hash: contentHash}).exec()).length < 1) {
+                        const saved = await fakeNew.save();
+                        console.log(`Saved fake new with id #${saved._id.toString()}`);
+                    } else {
+                        console.log(`Discarted fake with content hash ${contentHash} because fake new with same content hash alredy exists on database.`)
+                    }
+                }
             }
         }
     }
+    process.exit();
 }
 
 main();

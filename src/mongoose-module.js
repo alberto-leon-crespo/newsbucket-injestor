@@ -29,7 +29,7 @@ const mediaSchema = new Schema({
 const feedSchema = new Schema({
     _id: { type: Schema.ObjectId, auto: true },
     name: {type: String, required: true}, // String is shorthand for {type: String}
-    url: {type: String, required: true},
+    url: {type: String, required: true, unique: true},
     country: {type: String, required: true},
     type: {type: String, required: true},
     createdAt: {type: Date, default: (new Date()).toISOString()},
@@ -39,7 +39,10 @@ const feedSchema = new Schema({
 const newSchema = new Schema({
     _id: { type: Schema.ObjectId, auto: true },
     _feed: { type: Schema.ObjectId, required: true },
-    link: { type: String },
+    link: {
+        type: String,
+        unique: true // Especifica que este campo debe ser único
+    },
     title: { type: String, required: true },
     description: { type: String },
     content: { type: String },
@@ -62,9 +65,10 @@ const fakeNewSchema = new Schema({
     _id: { type: Schema.ObjectId, auto: true },
     title: { type: String },
     content: { type: String },
-    link: { type: String },
+    link: { type: String, unique: true },
     imgs: { type: Array, default: [] },
     content_hash: { type: String },
+    history: {type: Boolean, default: false },
     createdAt: {type: Date, default: (new Date()).toISOString()},
     updatedAt: {type: Date, default: (new Date()).toISOString()},
 });
