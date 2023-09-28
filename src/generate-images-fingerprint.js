@@ -5,7 +5,7 @@ const axios = require("axios");
 
 let isHistoryMode = false;
 let entity = undefined;
-const CHUNK_SIZE = 8000;
+const CHUNK_SIZE = 150;
 for (let i = 0; i < process.argv.length; i++) {
     if (process.argv[i] === '--collection=news') {
         entity = New;
